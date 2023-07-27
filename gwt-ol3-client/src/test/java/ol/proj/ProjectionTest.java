@@ -109,18 +109,18 @@ public class ProjectionTest extends GwtOLBaseTestCase {
                 double y = 47.5;
 
                 Coordinate centerCoordinate = new Coordinate(x, y);
-                Coordinate transformedCenterCoordinate = Projection.transform(centerCoordinate, EPSG_CODE_4326, EPSG_CODE_3857);
+                Coordinate transCenterCoord = Projection.transform(centerCoordinate, EPSG_CODE_4326, EPSG_CODE_3857);
 
-                assertTrue(transformedCenterCoordinate.getDimension() == 2);
-                assertTrue(transformedCenterCoordinate.getX() != x);
-                assertTrue(transformedCenterCoordinate.getY() != y);
-                
-                Coordinate sameTransformedCenterCoordinate = Projection.transform(centerCoordinate, Projection.get(EPSG_CODE_4326), Projection.get(EPSG_CODE_3857));
+                assertTrue(transCenterCoord.getDimension() == 2);
+                assertTrue(transCenterCoord.getX() != x);
+                assertTrue(transCenterCoord.getY() != y);
 
-                assertTrue(sameTransformedCenterCoordinate.getDimension() == 2);
-                assertEquals(transformedCenterCoordinate.getX(), sameTransformedCenterCoordinate.getX());
-                assertEquals(transformedCenterCoordinate.getY(), transformedCenterCoordinate.getY());
-                
+                Coordinate sameTransCenterCoord = Projection.transform(centerCoordinate, Projection.get(EPSG_CODE_4326), Projection.get(EPSG_CODE_3857));
+
+                assertTrue(sameTransCenterCoord.getDimension() == 2);
+                assertEquals(transCenterCoord.getX(), sameTransCenterCoord.getX());
+                assertEquals(transCenterCoord.getY(), transCenterCoord.getY());
+
             }
         });
 
