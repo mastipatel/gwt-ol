@@ -171,7 +171,7 @@ public class Measure extends Interaction {
         // set up interaction
         DrawOptions drawOptions = OLFactory.createOptions();
         drawOptions.setType(this.type.getValue());
- 
+
         // use a special style?
         if (this.style != null) {
             drawOptions.setStyle(this.style);
@@ -203,51 +203,47 @@ public class Measure extends Interaction {
         this.proj = this.getMap().getView().getProjection();
 
         this.getMap().addInteraction(this.draw);
-        // set up event handlers
-        OLUtil.observe(this.draw, "drawstart", (Draw.Event event) -> {
 
+        // set up event handlers for drawstart
+        OLUtil.observe(this.draw, "drawstart", (Draw.Event event) -> {
             // remember measure feature
             this.sketch = event.getFeature();
             // clean up overlay
             if (this.persistOverlay != null) {
                 this.persistOverlay.<ol.source.Vector> getSource().clear(false);
             }
-
         });
 
+        // set up event handlers for drawend
         OLUtil.observe(draw, "drawend", (Draw.Event event) -> {
-
-                // fire event and clean up
-                this.fireMeasureEvent();
-                // persist feature?
-                if (this.persistOverlay != null) {
-                    this.persistOverlay.<ol.source.Vector> getSource().addFeature(this.sketch);
-                }
-                this.sketch = null;
-
+            // fire event and clean up
+            this.fireMeasureEvent();
+            // persist feature?
+            if (this.persistOverlay != null) {
+                this.persistOverlay.<ol.source.Vector> getSource().addFeature(this.sketch);
+            }
+            this.sketch = null;
         });
 
         // handle mouse move if immediate updates are requested
         if (this.immediate) {
 
             this.pointerMoveListener = this.getMap().addPointerMoveListener((MapBrowserEvent event) -> {
-
                 if (this.draw.getActive()) {
                     this.fireMeasureEvent();
                 }
-
             });
+
             // this handler is necessary to support mobile devices without a mouse
             this.clickListener = this.getMap().addClickListener((MapBrowserEvent event) -> {
-
                 if (this.draw.getActive()) {
                     this.fireMeasureEvent();
                 }
-
             });
         }
 
     }
+
 
     private ol.layer.Vector getPersistOverlay() {
 
