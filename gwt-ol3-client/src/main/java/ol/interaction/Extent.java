@@ -53,6 +53,8 @@ public class Extent extends Pointer {
      */
     public native void setExtent(ol.Extent extent);
 
+
+
     /**
      * Triggered when extent changes.
      *
@@ -60,6 +62,7 @@ public class Extent extends Pointer {
      * @return handler registration
      */
     @JsOverlay
+
     public final HandlerRegistration addExtentChangedListener(final EventListener<Extent.Event> listener) {
         return OLUtil.observe(this, "extentchanged", listener);
     }

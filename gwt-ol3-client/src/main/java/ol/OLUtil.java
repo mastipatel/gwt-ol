@@ -46,6 +46,17 @@ import ol.tilegrid.XyzTileGridOptions;
  *
  * @author sbaumhekel
  */
+
+// A new utility class for coordinate transformation
+  class CoordUtils {
+    public static Coordinate[] transformCoordinates(Coordinate[] coordinates, String source, String destination) {
+        Coordinate[] transformedCoordinates = new Coordinate[coordinates.length];
+        for (int i = 0; i < coordinates.length; i++) {
+            transformedCoordinates[i] = Projection.transform(coordinates[i], source, destination);
+        }
+        return transformedCoordinates;
+    }
+}
 @ParametersAreNonnullByDefault
 public final class OLUtil {
 
