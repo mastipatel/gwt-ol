@@ -286,50 +286,52 @@ public final class OLUtil {
      */
     public static double getZoomLevel(PluggableMap map) {
         View v = map.getView();
-        // try to get zoom
-        double z = getZoom(v);
-        if(!Double.isNaN(z)) {
-            return z;
+        double zoom = getZoom(v);
+
+        if (!Double.isNaN(zoom)) {
+            return zoom;
         }
-        // zoom is undefined, so check resolution
+
         double zoomResolution = v.getResolution();
-        // walk layers to find resolution
-        CollectionWrapper<Base> layers = new CollectionWrapper<Base>(map.getLayers());
-        for(Base l : layers) {
-            // get source if layer instance has it
+        CollectionWrapper<Base> layers = new CollectionWrapper<>(map.getLayers());
+
+        for (Base l : layers) {
             Source source = l.get("source");
-            if(source != null) {
-                // try to get a tilegrid from the source
+
+            if (source != null) {
                 TileGrid tg = getTileGrid(source);
-                if(tg != null) {
-                    // check resolutions
+
+                if (tg != null) {
                     double[] resolutions = tg.getResolutions();
-                    if(resolutions != null) {
-                        double dPreviousResolution = 0;
-                        for(int i = 0; i < resolutions.length; i++) {
-                            // resolutions are sorted in descending order, so
-                            // compare with actual one
+
+                    if (resolutions != null) {
+                        double previousResolution = Double.POSITIVE_INFINITY;
+
+                        // Walk through the resolutions to find the appropriate zoom level
+                        for (int i = 0; i < resolutions.length; i++) {
                             double resolution = resolutions[i];
-                            if(resolution <= zoomResolution) {
-                                if(i > 1) {
-                                    // calculate the delta of the resolution
-                                    // compared to the current and the previous
-                                    // zoomlevel
-                                    double delta = (resolution - zoomResolution) / (dPreviousResolution - resolution);
-                                    // adjust the integer zoomlevel to the delta
+
+                            if (resolution <= zoomResolution) {
+                                if (i > 1) {
+                                    // Calculate the delta of the resolution compared to the current and the previous zoom level
+                                    double delta = (resolution - zoomResolution) / (previousResolution - resolution);
+                                    // Adjust the integer zoom level to the delta
                                     return i + delta;
                                 } else {
                                     return 0;
                                 }
                             }
-                            dPreviousResolution = resolution;
+
+                            previousResolution = resolution;
                         }
                     }
                 }
             }
         }
+
         return Double.NaN;
     }
+
 
     /**
      * Returns the geodesic area in square meters of the given geometry using
